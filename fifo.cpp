@@ -13,6 +13,14 @@ int findIndex(vector<int> arr, int size, int value) {
     return -1; 
 }
 
+vector<int> Fifo(queue<int>& que,vector<int>& curr,vector<int> list, int pageSize, int pos){
+    int swapedpage = que.front();
+    que.pop();
+    int index = findIndex(curr,pageSize,swapedpage);
+    curr[index] = list[pos];
+    
+    return curr;
+}
 
 void printAns(int pageSize,vector<vector<int>> ans,vector<int> list){
 
@@ -43,21 +51,12 @@ int main() {
         if(que.size()<pageSize){
             curr.push_back(list[i]);
             que.push(list[i]);
-            
         }    
-        
-        //replacement FIFO
         else if(findIndex(curr,pageSize,list[i])==-1){
-                int swapedpage = que.front();
-                que.pop();
-                int index = findIndex(curr,pageSize,swapedpage);
-                curr[index] = list[i];
-                que.push(list[i]);
-            
+                curr = Fifo(que,curr,list,pageSize,i);
+                que.push(list[i]);     
         }
-        
-        ans.push_back(curr);
-        
+        ans.push_back(curr);     
     }
     printAns(pageSize,ans,list);
     
