@@ -18,9 +18,25 @@ int duplicate(vector<int> list, int start, int end){
 
 }
 
-int findIndex(vector<int> arr, int size, int value) {
+int updateIndices(vector<int> list, int pos, int pageSize) {
+    int count = 0;
+    int end = pos - 1;
+    int start = end - pageSize + 1;
+    
+    
+    while (duplicate(list, start, end) - count != 0) {
+        
+        int duplicates = duplicate(list, start, end) -  count;
+        start -= duplicates;
+        count += duplicates;
+    }
+    
+    return start;
+}
+
+int findIndex(vector<int> vec, int size, int value) {
     for (int i = 0; i < size; ++i) {
-        if (arr[i] == value) {
+        if (vec[i] == value) {
             return i; 
         }
     }
@@ -44,31 +60,26 @@ void printAns(int pageSize,vector<vector<int>> ans,vector<int> list){
 
 }
 
-vector<int> LRU(vector<int> curr,vector<int> list,int pos,int pageSize){
-    
-    int count =0;
-    int end = pos-1;
-    int start = end-pageSize +1;
-    while(duplicate(list,start,end)-count!=0){
-        start -= duplicate(list,start,end);
-        count += duplicate(list,start,end);            
-    } 
+vector<int> LRU(vector<int>& curr,vector<int> list,int pos,int pageSize){
+    int start = updateIndices(list,pos,pageSize); 
     
     int index = findIndex(curr,pageSize,list[start]);
-    curr[index] = list[pos];
+    cout<<"start: "<<start<<endl;
+     curr[index] = list[pos];
     return curr;
 }
 
 int main() {
-    vector<int> list = {7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
+    
+    vector<int> list = {7,0,1,2,0,3,0,4,2,3,5,3,2,1,2,8,1,7,9,1};
     vector<vector<int>> ans;
-    int pageSize = 3;
+    int pageSize =4 ;
     vector<int> curr;
 
     for(int i=0;i<list.size();i++){
         if(i<pageSize)
             curr.push_back(list[i]);
-        //replacement LRU
+
         else if(findIndex(curr,pageSize,list[i])==-1)
             curr = LRU(curr,list,i,pageSize);
         ans.push_back(curr);
