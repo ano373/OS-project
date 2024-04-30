@@ -1,8 +1,6 @@
 using namespace std;
-#include <bits/stdc++.h>
-
 #include <iostream>
-
+#include <bits/stdc++.h>
 
 int findIndex(vector<int> arr, int size, int value) {
     for (int i = 0; i < size; ++i) {
@@ -11,15 +9,6 @@ int findIndex(vector<int> arr, int size, int value) {
         }
     }
     return -1; 
-}
-
-vector<int> Fifo(queue<int>& que,vector<int>& curr,vector<int> list, int pageSize, int pos){
-    int swapedpage = que.front();
-    que.pop();
-    int index = findIndex(curr,pageSize,swapedpage);
-    curr[index] = list[pos];
-    
-    return curr;
 }
 
 void printAns(int pageSize,vector<vector<int>> ans,vector<int> list){
@@ -39,6 +28,15 @@ void printAns(int pageSize,vector<vector<int>> ans,vector<int> list){
 
 }
 
+vector<int> Fifo(queue<int>& que,vector<int>& curr,vector<int> list, int pageSize, int pos){
+    int fault = que.front();
+    que.pop();
+    int index = findIndex(curr,pageSize,fault);
+    curr[index] = list[pos];
+    que.push(list[pos]);
+    return curr;
+}
+
 int main() {
     
     vector<int> list = {7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
@@ -46,6 +44,7 @@ int main() {
     vector<int> curr;
     vector<vector<int>> ans;
     queue<int> que;
+    int n= pageSize;
        
     for(int i=0;i<list.size();i++){
         if(que.size()<pageSize){
@@ -53,13 +52,13 @@ int main() {
             que.push(list[i]);
         }    
         else if(findIndex(curr,pageSize,list[i])==-1){
-                curr = Fifo(que,curr,list,pageSize,i);
-                que.push(list[i]);     
+                curr = Fifo(que,curr,list,pageSize,i); 
+                n++;    
         }
         ans.push_back(curr);     
     }
     printAns(pageSize,ans,list);
-    
+    cout<<"N: "<<n<<endl;
     
     
     return 0;
