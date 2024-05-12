@@ -59,11 +59,11 @@ int updateIndices(vector<int> list, int pos, int pageSize) {
     return start;
 }
 
-vector<int> LRU(vector<int>& curr,vector<int> list,int pos,int pageSize){
+vector<int> LRU(vector<int>& frame,vector<int> list,int pos,int pageSize){
     int start = updateIndices(list,pos,pageSize); 
-    int index = findIndex(curr,pageSize,list[start]);
-    curr[index] = list[pos];
-    return curr;
+    int index = findIndex(frame,pageSize,list[start]);
+    frame[index] = list[pos];
+    return frame;
 }
 
 int main() {
@@ -71,18 +71,18 @@ int main() {
     vector<int> list = {7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
     vector<vector<int>> ans;
     int pageSize =3 ;
-    vector<int> curr;
+    vector<int> frame;
     int n=pageSize;
 
     for(int i=0;i<list.size();i++){
         if(i<pageSize)
-            curr.push_back(list[i]);
+            frame.push_back(list[i]);
 
-        else if(findIndex(curr,pageSize,list[i])==NOT_FOUND){
-            curr = LRU(curr,list,i,pageSize);
+        else if(findIndex(frame,pageSize,list[i])==NOT_FOUND){
+            frame = LRU(frame,list,i,pageSize);
             n++;
         }
-        ans.push_back(curr);
+        ans.push_back(frame);
 
     }
     printAns(pageSize,ans,list);     
